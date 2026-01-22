@@ -31,11 +31,11 @@ serve(async (req) => {
     }
 
     // Call the external SEO agent API
-    const response = await fetch('https://your-seo-agent-api.com/run', {
+    const response = await fetch('https://agent-00seo.onrender.com/run', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': `Bearer ${7wUqtOAn_74LjoDjYALWD8vaIs4E99BYaWAwrmu3qww}`,
       },
       body: JSON.stringify({ products, limit }),
     });
