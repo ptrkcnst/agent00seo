@@ -35,7 +35,7 @@ serve(async (req) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${7wUqtOAn_74LjoDjYALWD8vaIs4E99BYaWAwrmu3qww}`,
+        'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({ products, limit }),
     });
