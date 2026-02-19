@@ -6,7 +6,9 @@ import { ResultsDisplay } from "@/components/ResultsDisplay";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { ErrorAlert } from "@/components/ErrorAlert";
 import { supabase } from "@/integrations/supabase/client";
-import { Play, Zap, FileJson, Settings2 } from "lucide-react";
+import { Play, Zap, FileJson, Settings2, Globe } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface SeoResults {
   keywords?: string;
@@ -21,6 +23,7 @@ const sampleProducts = [
 ];
 
 const Index = () => {
+  const [website, setWebsite] = useState("");
   const [jsonInput, setJsonInput] = useState("");
   const [limit, setLimit] = useState("2");
   const [jsonError, setJsonError] = useState("");
@@ -95,6 +98,27 @@ const Index = () => {
             AI-powered SEO draft generator for product pages
           </p>
         </header>
+
+        {/* Website Field */}
+        <div className="mb-6 animate-fade-in-up rounded-xl border border-border bg-card p-6 shadow-lg" style={{ animationDelay: '0.05s' }}>
+          <div className="flex items-center gap-2 mb-4">
+            <Globe className="h-4 w-4 text-primary" />
+            <h2 className="text-sm font-semibold text-foreground tracking-wide uppercase">Website</h2>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="website-url" className="text-sm font-medium text-muted-foreground">
+              Website URL
+            </Label>
+            <Input
+              id="website-url"
+              type="url"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              placeholder="https://example.com"
+              className="bg-muted/50 border-border focus:ring-primary focus:border-primary/50 transition-colors"
+            />
+          </div>
+        </div>
 
         {/* Input Card */}
         <div className="mb-6 animate-fade-in-up rounded-xl border border-border bg-card p-6 shadow-lg" style={{ animationDelay: '0.1s' }}>
