@@ -1,7 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Copy, Download } from "lucide-react";
+import { Copy, Download, Check, Search, FileText, MousePointerClick, MapPin } from "lucide-react";
 import { toast } from "sonner";
+import { useState } from "react";
 
 interface ResultsDisplayProps {
   results: {
@@ -13,12 +14,16 @@ interface ResultsDisplayProps {
 }
 
 export function ResultsDisplay({ results }: ResultsDisplayProps) {
-  const copyToClipboard = async (content: string, label: string) => {
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const copyToClipboard = async (content: string, id: string, label: string) => {
     try {
       await navigator.clipboard.writeText(content);
-      toast.success(`${label} copied to clipboard`);
+      setCopiedId(id);
+      toast.success(`${label} copied`);
+      setTimeout(() => setCopiedId(null), 2000);
     } catch {
-      toast.error("Failed to copy to clipboard");
+      toast.error("Failed to copy");
     }
   };
 
@@ -38,55 +43,62 @@ export function ResultsDisplay({ results }: ResultsDisplayProps) {
   };
 
   const tabs = [
-    { id: "keywords", label: "Keywords", content: results.keywords || "" },
-    { id: "product-page-1", label: "Product Page 1", content: results.productPages?.[0] || "" },
-    { id: "product-page-2", label: "Product Page 2", content: results.productPages?.[1] || "" },
-    { id: "cro-suggestions", label: "CRO Suggestions", content: results.croSuggestions || "" },
-    { id: "local-seo", label: "Local SEO", content: results.localSeo || "" },
+    { id: "keywords", label: "Keywords", icon: Search, content: results.keywords || "" },
+    { id: "product-page-1", label: "Page 1", icon: FileText, content: results.productPages?.[0] || "" },
+    { id: "product-page-2", label: "Page 2", icon: FileText, content: results.productPages?.[1] || "" },
+    { id: "cro-suggestions", label: "CRO", icon: MousePointerClick, content: results.croSuggestions || "" },
+    { id: "local-seo", label: "Local SEO", icon: MapPin, content: results.localSeo || "" },
   ];
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-foreground">Generated Drafts</h2>
+    <div className="rounded-xl border border-border bg-card p-6 shadow-lg space-y-4">
+      <div className="flex items-center gap-2">
+        <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
+        <h2 className="text-sm font-semibold text-foreground tracking-wide uppercase">Results</h2>
+      </div>
+
       <Tabs defaultValue="keywords" className="w-full">
-        <TabsList className="w-full justify-start bg-muted p-1 overflow-x-auto">
+        <TabsList className="w-full justify-start bg-muted/50 p-1 rounded-lg overflow-x-auto gap-0.5">
           {tabs.map((tab) => (
             <TabsTrigger
               key={tab.id}
               value={tab.id}
-              className="data-[state=active]:bg-card data-[state=active]:text-foreground"
+              className="gap-1.5 text-xs data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none rounded-md transition-colors"
             >
+              <tab.icon className="h-3.5 w-3.5" />
               {tab.label}
             </TabsTrigger>
           ))}
         </TabsList>
 
         {tabs.map((tab) => (
-          <TabsContent key={tab.id} value={tab.id} className="mt-4">
-            <div className="rounded-md border border-border bg-card">
-              <div className="flex items-center justify-end gap-2 border-b border-border px-4 py-2">
+          <TabsContent key={tab.id} value={tab.id} className="mt-3 animate-fade-in-up">
+            <div className="rounded-lg border border-border bg-muted/30 overflow-hidden">
+              <div className="flex items-center justify-end gap-1 border-b border-border px-3 py-1.5 bg-muted/20">
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => copyToClipboard(tab.content, tab.label)}
-                  className="h-8 gap-2 text-muted-foreground hover:text-foreground"
+                  onClick={() => copyToClipboard(tab.content, tab.id, tab.label)}
+                  className="h-7 gap-1.5 text-xs text-muted-foreground hover:text-primary"
                 >
-                  <Copy className="h-4 w-4" />
-                  Copy
+                  {copiedId === tab.id ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
+                  {copiedId === tab.id ? "Copied" : "Copy"}
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => downloadContent(tab.content, tab.id, tab.id === "keywords")}
-                  className="h-8 gap-2 text-muted-foreground hover:text-foreground"
+                  className="h-7 gap-1.5 text-xs text-muted-foreground hover:text-primary"
                 >
-                  <Download className="h-4 w-4" />
+                  <Download className="h-3.5 w-3.5" />
                   Download
                 </Button>
               </div>
               <div className="max-h-[400px] overflow-auto p-4">
-                <pre className="whitespace-pre-wrap font-mono text-sm text-foreground">
-                  {tab.content || "No content available"}
+                <pre className="whitespace-pre-wrap font-mono text-sm text-foreground/85 leading-relaxed">
+                  {tab.content || (
+                    <span className="text-muted-foreground italic">No content available for this section.</span>
+                  )}
                 </pre>
               </div>
             </div>

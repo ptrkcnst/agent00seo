@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { JsonInput } from "@/components/JsonInput";
 import { LimitSelect } from "@/components/LimitSelect";
 import { ResultsDisplay } from "@/components/ResultsDisplay";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { ErrorAlert } from "@/components/ErrorAlert";
 import { supabase } from "@/integrations/supabase/client";
-import { Play } from "lucide-react";
+import { Play, Zap, FileJson, Settings2 } from "lucide-react";
 
 interface SeoResults {
   keywords?: string;
@@ -15,6 +14,11 @@ interface SeoResults {
   croSuggestions?: string;
   localSeo?: string;
 }
+
+const sampleProducts = [
+  { name: "Premium Chess Set", slug: "premium-chess-set", type: "premium_set", price: 599 },
+  { name: "Tournament Board", slug: "tournament-board", type: "premium_set", price: 349 },
+];
 
 const Index = () => {
   const [jsonInput, setJsonInput] = useState("");
@@ -43,6 +47,11 @@ const Index = () => {
     }
   };
 
+  const handleLoadSample = () => {
+    setJsonInput(JSON.stringify(sampleProducts, null, 2));
+    setJsonError("");
+  };
+
   const handleRunAgent = async () => {
     const products = validateJson(jsonInput);
     if (!products) return;
@@ -53,16 +62,10 @@ const Index = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke("run-seo-agent", {
-        body: {
-          products,
-          limit: parseInt(limit, 10),
-        },
+        body: { products, limit: parseInt(limit, 10) },
       });
 
-      if (error) {
-        throw new Error(error.message || "Failed to run SEO agent");
-      }
-
+      if (error) throw new Error(error.message || "Failed to run SEO agent");
       setResults(data);
     } catch (err) {
       const message = err instanceof Error ? err.message : "An unexpected error occurred";
@@ -74,75 +77,84 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+      {/* Subtle grid background */}
+      <div className="fixed inset-0 bg-[linear-gradient(hsl(220_18%_14%_/_0.5)_1px,transparent_1px),linear-gradient(90deg,hsl(220_18%_14%_/_0.5)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
+
+      <div className="relative mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Agent 00Seo
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            SEO Draft Generator – Internal Admin Tool
+        <header className="mb-10 animate-fade-in-up">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 glow-primary-sm">
+              <Zap className="h-5 w-5 text-primary" />
+            </div>
+            <h1 className="text-2xl font-bold tracking-tight text-gradient">
+              Agent 00Seo
+            </h1>
+          </div>
+          <p className="text-sm text-muted-foreground pl-[52px]">
+            AI-powered SEO draft generator for product pages
           </p>
+        </header>
+
+        {/* Input Card */}
+        <div className="mb-6 animate-fade-in-up rounded-xl border border-border bg-card p-6 shadow-lg" style={{ animationDelay: '0.1s' }}>
+          <div className="flex items-center gap-2 mb-5">
+            <FileJson className="h-4 w-4 text-primary" />
+            <h2 className="text-sm font-semibold text-foreground tracking-wide uppercase">Input</h2>
+          </div>
+
+          <JsonInput
+            value={jsonInput}
+            onChange={setJsonInput}
+            error={jsonError}
+            onLoadSample={handleLoadSample}
+          />
+
+          <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="flex items-center gap-2">
+              <Settings2 className="h-4 w-4 text-muted-foreground" />
+              <LimitSelect value={limit} onChange={setLimit} />
+            </div>
+
+            <Button
+              onClick={handleRunAgent}
+              disabled={isLoading}
+              className="gap-2 glow-primary hover:glow-primary transition-shadow font-semibold px-6"
+              size="lg"
+            >
+              <Play className="h-4 w-4" />
+              Run Agent
+            </Button>
+          </div>
         </div>
 
-        {/* Input Section */}
-        <Card className="mb-6">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-base font-medium">Input Configuration</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <JsonInput
-              value={jsonInput}
-              onChange={setJsonInput}
-              error={jsonError}
-            />
-
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-              <LimitSelect value={limit} onChange={setLimit} />
-              
-              <Button
-                onClick={handleRunAgent}
-                disabled={isLoading}
-                className="gap-2"
-              >
-                <Play className="h-4 w-4" />
-                Run Agent
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Loading State */}
+        {/* Loading */}
         {isLoading && (
-          <Card className="mb-6">
-            <CardContent className="py-0">
-              <LoadingSpinner />
-            </CardContent>
-          </Card>
+          <div className="mb-6 animate-fade-in-up">
+            <LoadingSpinner />
+          </div>
         )}
 
-        {/* Error Display */}
+        {/* Error */}
         {apiError && !isLoading && (
-          <div className="mb-6">
+          <div className="mb-6 animate-fade-in-up">
             <ErrorAlert message={apiError} />
           </div>
         )}
 
         {/* Results */}
         {results && !isLoading && (
-          <Card className="mb-6">
-            <CardContent className="pt-6">
-              <ResultsDisplay results={results} />
-            </CardContent>
-          </Card>
+          <div className="mb-6 animate-fade-in-up">
+            <ResultsDisplay results={results} />
+          </div>
         )}
 
-        {/* Footer Disclaimer */}
-        <div className="mt-8 rounded-md border border-border bg-muted/50 p-4">
-          <p className="text-center text-xs text-muted-foreground">
+        {/* Footer */}
+        <footer className="mt-12 text-center animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+          <p className="text-xs text-muted-foreground/60">
             All generated content is draft-only and must be reviewed before publishing.
           </p>
-        </div>
+        </footer>
       </div>
     </div>
   );
