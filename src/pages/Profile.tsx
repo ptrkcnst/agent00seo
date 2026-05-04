@@ -45,7 +45,7 @@ export default function Profile() {
       <div className="fixed inset-0 bg-[linear-gradient(hsl(var(--muted)/0.5)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--muted)/0.5)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
       <div className="relative mx-auto max-w-2xl px-4 py-10">
         <AppHeader />
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-lg space-y-5 animate-fade-in-up">
+        <div className="rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-lg space-y-5 animate-fade-in-up">
           <div>
             <h2 className="text-lg font-semibold text-foreground">Your profile</h2>
             <p className="text-xs text-muted-foreground">Shown across the app and on shared reports.</p>

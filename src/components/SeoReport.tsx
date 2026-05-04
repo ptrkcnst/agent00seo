@@ -167,47 +167,49 @@ export function SeoReport({ report, onReset }: { report: Report; onReset: () => 
   return (
     <div className="space-y-6 animate-fade-in-up">
       {/* Header card */}
-      <div className="rounded-2xl border border-border bg-card p-6 shadow-lg">
+      <div className="rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-lg">
         <div className="flex flex-col md:flex-row md:items-center gap-6">
-          <ScoreGauge score={report.score} grade={report.grade} />
-          <div className="flex-1 space-y-3">
+          <div className="flex justify-center md:block">
+            <ScoreGauge score={report.score} grade={report.grade} />
+          </div>
+          <div className="flex-1 space-y-3 min-w-0">
             <div>
               <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">SEO Audit</p>
-              <a href={report.url} target="_blank" rel="noopener noreferrer" className="text-lg font-semibold text-foreground hover:text-primary transition-colors inline-flex items-center gap-1.5 break-all">
+              <a href={report.url} target="_blank" rel="noopener noreferrer" className="text-base sm:text-lg font-semibold text-foreground hover:text-primary transition-colors inline-flex items-center gap-1.5 break-all">
                 {report.url}
                 <ExternalLink className="h-3.5 w-3.5 shrink-0" />
               </a>
             </div>
             <p className={cn("text-sm font-medium", scoreColor)}>{report.summary}</p>
-            <div className="grid grid-cols-3 gap-3 pt-2">
-              <div className="rounded-lg bg-destructive/10 border border-destructive/20 p-3">
-                <p className="text-2xl font-bold text-destructive">{report.stats.critical}</p>
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-2">
+              <div className="rounded-lg bg-destructive/10 border border-destructive/20 p-2 sm:p-3">
+                <p className="text-xl sm:text-2xl font-bold text-destructive">{report.stats.critical}</p>
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground mt-1">Critical</p>
               </div>
-              <div className="rounded-lg bg-warning/10 border border-warning/20 p-3">
-                <p className="text-2xl font-bold text-warning">{report.stats.warnings}</p>
+              <div className="rounded-lg bg-warning/10 border border-warning/20 p-2 sm:p-3">
+                <p className="text-xl sm:text-2xl font-bold text-warning">{report.stats.warnings}</p>
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground mt-1">Warnings</p>
               </div>
-              <div className="rounded-lg bg-success/10 border border-success/20 p-3">
-                <p className="text-2xl font-bold text-success">{report.stats.passed}</p>
+              <div className="rounded-lg bg-success/10 border border-success/20 p-2 sm:p-3">
+                <p className="text-xl sm:text-2xl font-bold text-success">{report.stats.passed}</p>
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground mt-1">Passed</p>
               </div>
             </div>
           </div>
         </div>
-        <div className="mt-6 flex justify-end gap-2">
+        <div className="mt-6 flex flex-wrap justify-end gap-2">
           <Button
             variant="outline"
             size="sm"
             onClick={() => exportReportToPdf(report, report.crawl?.pages)}
-            className="gap-2"
+            className="gap-2 flex-1 sm:flex-none min-w-0"
           >
             <FileDown className="h-3.5 w-3.5" />
-            Download PDF
+            <span className="truncate">Download PDF</span>
           </Button>
-          <Button variant="outline" size="sm" onClick={onReset} className="gap-2">
+          <Button variant="outline" size="sm" onClick={onReset} className="gap-2 flex-1 sm:flex-none min-w-0">
             <RotateCcw className="h-3.5 w-3.5" />
-            Analyze another site
+            <span className="truncate">Analyze another site</span>
           </Button>
         </div>
       </div>
@@ -217,7 +219,7 @@ export function SeoReport({ report, onReset }: { report: Report; onReset: () => 
         const open = cat.issues.filter(i => i.severity !== "good");
         const passed = cat.issues.filter(i => i.severity === "good");
         return (
-          <div key={cat.name} className="rounded-2xl border border-border bg-card p-6 shadow-lg">
+          <div key={cat.name} className="rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-lg">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-base font-semibold text-foreground">{cat.name}</h3>

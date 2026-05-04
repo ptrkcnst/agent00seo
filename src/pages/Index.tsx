@@ -111,7 +111,7 @@ const Index = () => {
               </p>
             </div>
 
-            <form onSubmit={handleAnalyze} className="rounded-2xl border border-border bg-card p-6 shadow-lg">
+            <form onSubmit={handleAnalyze} className="rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-lg">
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="relative flex-1">
                   <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />

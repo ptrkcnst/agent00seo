@@ -52,12 +52,12 @@ export default function History() {
       <div className="relative mx-auto max-w-3xl px-4 py-10">
         <AppHeader />
 
-        <div className="mb-5 flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-foreground flex items-center gap-2"><HistoryIcon className="h-5 w-5 text-primary" /> Audit history</h2>
+        <div className="mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="min-w-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2"><HistoryIcon className="h-5 w-5 text-primary shrink-0" /> Audit history</h2>
             <p className="text-sm text-muted-foreground mt-0.5">Every site you've audited, ready to re-open or re-run.</p>
           </div>
-          <Button onClick={() => nav("/")} variant="outline" size="sm" className="gap-1.5">
+          <Button onClick={() => nav("/")} variant="outline" size="sm" className="gap-1.5 self-start sm:self-auto shrink-0">
             <RotateCcw className="h-3.5 w-3.5" /> New audit
           </Button>
         </div>
@@ -75,20 +75,28 @@ export default function History() {
               const scoreColor = a.score >= 80 ? "text-success" : a.score >= 60 ? "text-warning" : "text-destructive";
               const scoreBg = a.score >= 80 ? "bg-success/10 border-success/30" : a.score >= 60 ? "bg-warning/10 border-warning/30" : "bg-destructive/10 border-destructive/30";
               return (
-                <div key={a.id} className="rounded-xl border border-border bg-card p-4 flex items-center gap-4 hover:border-primary/40 transition-colors">
-                  <div className={cn("flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-lg border", scoreBg)}>
-                    <span className={cn("text-lg font-bold leading-none", scoreColor)}>{a.score}</span>
+                <div key={a.id} className="rounded-xl border border-border bg-card p-3 sm:p-4 flex items-start sm:items-center gap-3 sm:gap-4 hover:border-primary/40 transition-colors">
+                  <div className={cn("flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 flex-col items-center justify-center rounded-lg border", scoreBg)}>
+                    <span className={cn("text-base sm:text-lg font-bold leading-none", scoreColor)}>{a.score}</span>
                     <span className="text-[9px] uppercase tracking-wider text-muted-foreground mt-0.5">{a.grade}</span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <a href={a.url} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-foreground hover:text-primary truncate flex items-center gap-1">
-                      {a.url}
+                      <span className="truncate">{a.url}</span>
                       <ExternalLink className="h-3 w-3 shrink-0" />
                     </a>
-                    <p className="text-xs text-muted-foreground mt-0.5 truncate">{a.summary}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2 sm:truncate">{a.summary}</p>
                     <p className="text-[10px] text-muted-foreground/70 mt-1">{formatDistanceToNow(new Date(a.created_at), { addSuffix: true })}</p>
+                    <div className="flex items-center gap-1 mt-2 sm:hidden">
+                      <Button size="sm" variant="ghost" className="gap-1.5 text-xs h-8 px-2" onClick={() => nav(`/?audit=${a.id}`)}>
+                        <Eye className="h-3.5 w-3.5" /> Open
+                      </Button>
+                      <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => remove(a.id)}>
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
+                  <div className="hidden sm:flex items-center gap-1.5 shrink-0">
                     <Button size="sm" variant="ghost" className="gap-1.5 text-xs" onClick={() => nav(`/?audit=${a.id}`)}>
                       <Eye className="h-3.5 w-3.5" /> Open
                     </Button>
