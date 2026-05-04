@@ -75,6 +75,7 @@ export default function Profile() {
             </>
           )}
         </div>
+        <AppFooter />
       </div>
     </div>
   );
