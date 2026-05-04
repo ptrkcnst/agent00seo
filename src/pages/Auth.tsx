@@ -59,9 +59,9 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-background grid place-items-center px-4">
+    <div className="min-h-screen bg-background grid place-items-center px-4 py-10">
       <div className="fixed inset-0 bg-[linear-gradient(hsl(var(--muted)/0.5)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--muted)/0.5)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
-      <div className="relative w-full max-w-md animate-fade-in-up">
+      <div className="relative w-full max-w-md animate-fade-in-up flex flex-col">
         <div className="flex flex-col items-center mb-6">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 glow-primary-sm mb-3">
             <Zap className="h-5 w-5 text-primary" />
