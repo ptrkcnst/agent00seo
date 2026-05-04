@@ -253,6 +253,16 @@ function analyze(url: string, html: string, status: number, headers: Headers): A
   if (!metaDescription || metaDescription.length < 70 || metaDescription.length > 165) weakSeoFields.push("metaDescription");
   if (h1s.length === 0 || h1s.length > 1) weakSeoFields.push("h1");
 
+  // Platform detection (best-effort heuristics)
+  let detectedPlatform: string = "unknown";
+  if (/wp-content|wp-includes|wp-json/i.test(html)) detectedPlatform = "wordpress";
+  else if (/cdn\.shopify\.com|shopify\.com\/s\/files|window\.Shopify/i.test(html)) detectedPlatform = "shopify";
+  else if (/webflow\.com|data-wf-page|wf-loaded/i.test(html)) detectedPlatform = "webflow";
+  else if (/wixstatic\.com|wix\.com|X-Wix-/i.test(html) || /X-Wix-/i.test(headers.get("x-wix-request-id") || "")) detectedPlatform = "wix";
+  else if (/lovable\.app|lovable\.dev/i.test(html) || /lovable/i.test(headers.get("server") || "")) detectedPlatform = "lovable";
+  else if (/__NEXT_DATA__|_next\/static|next\.js/i.test(html)) detectedPlatform = "nextjs";
+  else if (/<\/html>/i.test(html) && !/react|vue|angular|next/i.test(html)) detectedPlatform = "html";
+
   return {
     url,
     score: Math.round(score),
@@ -268,6 +278,7 @@ function analyze(url: string, html: string, status: number, headers: Headers): A
       topic,
     },
     weakSeoFields,
+    detectedPlatform,
   };
 }
 
