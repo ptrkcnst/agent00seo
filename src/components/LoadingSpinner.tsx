@@ -1,10 +1,10 @@
 import { Loader2 } from "lucide-react";
 
 const steps = [
-  "Analyzing product data…",
-  "Researching keywords…",
-  "Generating SEO drafts…",
-  "Compiling results…",
+  "Fetching your page…",
+  "Inspecting meta tags & headings…",
+  "Checking performance & structured data…",
+  "Calculating your SEO score…",
 ];
 
 export function LoadingSpinner() {
@@ -18,7 +18,7 @@ export function LoadingSpinner() {
           </div>
         </div>
         <div className="space-y-3 text-center">
-          <p className="text-sm font-medium text-foreground">Agent is working…</p>
+          <p className="text-sm font-medium text-foreground">Auditing your site…</p>
           <div className="space-y-1.5">
             {steps.map((step, i) => (
               <p
