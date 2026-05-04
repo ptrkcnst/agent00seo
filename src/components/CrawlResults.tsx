@@ -17,7 +17,7 @@ export function CrawlResults({ pages }: { pages: CrawlPage[] }) {
   if (!pages || pages.length === 0) return null;
   const avg = Math.round(pages.reduce((s, p) => s + p.score, 0) / pages.length);
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-lg">
+    <div className="rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-lg">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
