@@ -174,6 +174,8 @@ const Index = () => {
         )}
 
         {report && !isLoading && <SeoReport report={report} onReset={handleReset} />}
+
+        <AppFooter />
       </div>
     </div>
   );
