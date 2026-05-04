@@ -5,6 +5,7 @@ import { toast } from "@/hooks/use-toast";
 import { AiSectionCard } from "./AiSectionCard";
 import { CopyButton } from "./CopyButton";
 import { BeforeAfterSerp, SerpPreview } from "./SerpPreview";
+import { FeedbackButtons } from "./FeedbackButtons";
 
 interface PageContext { url: string; title: string; metaDescription: string; h1: string; topic: string; }
 interface Rewrites { metaTitle?: string; metaDescription?: string; h1?: string; }
@@ -74,6 +75,14 @@ export function SeoRewritePanel({ pageContext, weakFields }: { pageContext: Page
               <p className="text-[10px] uppercase tracking-wider text-primary mb-1">{FIELD_LABELS[key]} ({value.length} chars)</p>
               <p className="text-sm text-foreground/90 pr-16">{value}</p>
               <div className="absolute top-2 right-2"><CopyButton text={value} /></div>
+              <div className="mt-3 flex justify-end">
+                <FeedbackButtons
+                  section="seo_rewrite"
+                  itemKey={key}
+                  pageUrl={pageContext.url}
+                  context={{ field: key, value }}
+                />
+              </div>
             </div>
           ))}
 

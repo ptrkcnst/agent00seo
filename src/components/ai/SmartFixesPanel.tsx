@@ -5,6 +5,7 @@ import { toast } from "@/hooks/use-toast";
 import { AiSectionCard } from "./AiSectionCard";
 import { CopyButton } from "./CopyButton";
 import { PlatformSteps } from "./PlatformSteps";
+import { FeedbackButtons } from "./FeedbackButtons";
 import type { Platform } from "./PlatformPicker";
 
 interface Issue { id: string; title: string; description: string; severity: string; }
@@ -69,6 +70,14 @@ export function SmartFixesPanel({
                   </div>
                 )}
                 <PlatformSteps steps={f.implementationSteps || []} platform={platform} />
+                <div className="mt-3 flex justify-end">
+                  <FeedbackButtons
+                    section="smart_fix"
+                    itemKey={f.issueId}
+                    pageUrl={pageContext.url}
+                    context={{ platform, issueTitle: issue?.title }}
+                  />
+                </div>
               </div>
             );
           })}
