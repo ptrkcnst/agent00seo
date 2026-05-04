@@ -4,12 +4,22 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { AiSectionCard } from "./AiSectionCard";
 import { CopyButton } from "./CopyButton";
+import { PlatformSteps } from "./PlatformSteps";
+import type { Platform } from "./PlatformPicker";
 
 interface Issue { id: string; title: string; description: string; severity: string; }
-interface Fix { issueId: string; personalizedFix: string; example: string; }
+interface Fix { issueId: string; personalizedFix: string; example: string; implementationSteps: string[]; }
 interface PageContext { url: string; title: string; metaDescription: string; h1: string; topic: string; }
 
-export function SmartFixesPanel({ issues, pageContext }: { issues: Issue[]; pageContext: PageContext }) {
+export function SmartFixesPanel({
+  issues,
+  pageContext,
+  platform,
+}: {
+  issues: Issue[];
+  pageContext: PageContext;
+  platform: Platform;
+}) {
   const [loading, setLoading] = useState(false);
   const [fixes, setFixes] = useState<Fix[] | null>(null);
 
@@ -19,7 +29,7 @@ export function SmartFixesPanel({ issues, pageContext }: { issues: Issue[]; page
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("ai-smart-fixes", {
-        body: { issues: realIssues, pageContext },
+        body: { issues: realIssues, pageContext, platform },
       });
       if (error) throw new Error(error.message);
       if (data?.error) throw new Error(data.error);
@@ -35,7 +45,7 @@ export function SmartFixesPanel({ issues, pageContext }: { issues: Issue[]; page
     <AiSectionCard
       icon={Wrench}
       title="Smart Fix Suggestions"
-      subtitle={`Personalized fixes for the ${realIssues.length} issue${realIssues.length === 1 ? "" : "s"} we found on your page`}
+      subtitle={`Personalized fixes for the ${realIssues.length} issue${realIssues.length === 1 ? "" : "s"} we found, with step-by-step instructions for your platform`}
       loading={loading}
       hasResults={!!fixes}
       onGenerate={generate}
@@ -58,6 +68,7 @@ export function SmartFixesPanel({ issues, pageContext }: { issues: Issue[]; page
                     <div className="absolute top-2 right-2"><CopyButton text={f.example} /></div>
                   </div>
                 )}
+                <PlatformSteps steps={f.implementationSteps || []} platform={platform} />
               </div>
             );
           })}

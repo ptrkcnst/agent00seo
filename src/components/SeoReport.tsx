@@ -1,11 +1,12 @@
 import { AlertTriangle, AlertCircle, Info, CheckCircle2, ChevronDown, RotateCcw, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { SmartFixesPanel } from "@/components/ai/SmartFixesPanel";
 import { ConversionBoosterPanel } from "@/components/ai/ConversionBoosterPanel";
 import { SeoRewritePanel } from "@/components/ai/SeoRewritePanel";
 import { ProductDraftPanel } from "@/components/ai/ProductDraftPanel";
+import { PlatformPicker, getStoredPlatform, type Platform } from "@/components/ai/PlatformPicker";
 
 type Severity = "critical" | "warning" | "info" | "good";
 
@@ -36,6 +37,7 @@ export interface Report {
   categories: { name: string; score: number; issues: Issue[] }[];
   pageContext: PageContext;
   weakSeoFields: string[];
+  detectedPlatform?: string;
 }
 
 const severityMeta: Record<Severity, { icon: typeof AlertTriangle; label: string; color: string; bg: string; ring: string }> = {
@@ -120,8 +122,23 @@ function IssueCard({ issue }: { issue: Issue }) {
   );
 }
 
+const VALID_PLATFORMS: Platform[] = ["wordpress", "shopify", "webflow", "wix", "lovable", "nextjs", "html", "other"];
+
 export function SeoReport({ report, onReset }: { report: Report; onReset: () => void }) {
   const scoreColor = report.score >= 80 ? "text-success" : report.score >= 60 ? "text-warning" : "text-destructive";
+
+  const detected = (VALID_PLATFORMS.includes(report.detectedPlatform as Platform)
+    ? report.detectedPlatform
+    : null) as Platform | null;
+
+  const [platform, setPlatform] = useState<Platform>(() => {
+    return getStoredPlatform() ?? detected ?? "other";
+  });
+
+  // If user hasn't picked one yet, follow detected when a new report arrives.
+  useEffect(() => {
+    if (!getStoredPlatform() && detected) setPlatform(detected);
+  }, [detected]);
 
   return (
     <div className="space-y-6 animate-fade-in-up">
@@ -200,11 +217,13 @@ export function SeoReport({ report, onReset }: { report: Report; onReset: () => 
         </div>
       </div>
 
+      <PlatformPicker value={platform} onChange={setPlatform} detected={detected} />
+
       {(() => {
         const allIssues = report.categories.flatMap(c => c.issues);
         return (
           <>
-            <SmartFixesPanel issues={allIssues} pageContext={report.pageContext} />
+            <SmartFixesPanel issues={allIssues} pageContext={report.pageContext} platform={platform} />
             <SeoRewritePanel pageContext={report.pageContext} weakFields={report.weakSeoFields} />
             <ConversionBoosterPanel pageContext={report.pageContext} />
             <ProductDraftPanel pageContext={report.pageContext} />

@@ -8,7 +8,7 @@ const corsHeaders = {
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   try {
-    const { issues, pageContext } = await req.json();
+    const { issues, pageContext, platform } = await req.json();
     if (!Array.isArray(issues) || !pageContext) {
       return new Response(JSON.stringify({ error: "issues[] and pageContext required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -21,14 +21,29 @@ serve(async (req) => {
       id: i.id, title: i.title, description: i.description, severity: i.severity,
     }));
 
+    const PLATFORM_LABELS: Record<string, string> = {
+      wordpress: "WordPress (Yoast/Rank Math SEO plugin assumed for meta fields)",
+      shopify: "Shopify (admin dashboard, theme editor)",
+      webflow: "Webflow (Designer + page settings)",
+      wix: "Wix (editor + SEO panel)",
+      lovable: "Lovable (edits via the Lovable AI editor and index.html)",
+      nextjs: "Next.js / React (metadata API, app/layout.tsx, head tags)",
+      html: "Plain HTML (edit the page's <head> and body directly)",
+      other: "a generic CMS/website builder",
+    };
+    const platformLabel = PLATFORM_LABELS[platform] || PLATFORM_LABELS.other;
+
     const systemPrompt = `You are an elite SEO consultant. For each REAL issue found on the user's page, write a personalized, specific, ready-to-paste fix using the actual page context (title, h1, URL, topic).
 RULES:
 - ONLY address issues actually present in the input — never invent generic advice.
 - Each fix must reference the user's specific page (their topic, brand, or content).
 - Provide an EXAMPLE the user can paste directly (e.g. exact title text, exact meta description string, exact HTML snippet).
+- Provide implementationSteps: 3-6 SHORT numbered steps describing exactly where to click in ${platformLabel} to apply the fix. Use the platform's real menu names. No code in steps — code goes in 'example'.
 - Be concise. No fluff, no "you should consider" wording.`;
 
-    const userPrompt = `Page context:
+    const userPrompt = `Platform: ${platformLabel}
+
+Page context:
 URL: ${pageContext.url}
 Title: ${pageContext.title || "(missing)"}
 Meta description: ${pageContext.metaDescription || "(missing)"}
@@ -63,8 +78,13 @@ ${trimmedIssues.map((i: any, idx: number) => `${idx + 1}. [${i.id}] ${i.title} �
                       issueId: { type: "string" },
                       personalizedFix: { type: "string", description: "1-2 sentence fix tailored to the page" },
                       example: { type: "string", description: "Ready-to-paste example (text or code)" },
+                      implementationSteps: {
+                        type: "array",
+                        items: { type: "string" },
+                        description: "3-6 short numbered steps for the user's platform. No code.",
+                      },
                     },
-                    required: ["issueId", "personalizedFix", "example"],
+                    required: ["issueId", "personalizedFix", "example", "implementationSteps"],
                     additionalProperties: false,
                   },
                 },

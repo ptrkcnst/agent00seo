@@ -1,14 +1,13 @@
 import { useState } from "react";
-import { Package } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Package, Loader2, Sparkles } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Loader2, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { AiSectionCard } from "./AiSectionCard";
 import { CopyButton } from "./CopyButton";
+import { ProductCardPreview } from "./ProductCardPreview";
 
 interface PageContext { url: string; title: string; metaDescription: string; h1: string; topic: string; }
 interface Draft { name: string; slug: string; description: string; altNames: string[]; }
@@ -42,7 +41,7 @@ export function ProductDraftPanel({ pageContext }: { pageContext: PageContext })
     <AiSectionCard
       icon={Package}
       title="Product Draft Generator"
-      subtitle="Generate name, slug and SEO-ready description in your brand voice"
+      subtitle="Generate name, slug and SEO-ready description — see it as a real product card"
       hideCta
     >
       <div className="space-y-3">
@@ -62,32 +61,38 @@ export function ProductDraftPanel({ pageContext }: { pageContext: PageContext })
         </Button>
 
         {draft && (
-          <div className="space-y-3 pt-2">
-            <div className="rounded-lg border border-border bg-muted/20 p-4 relative">
-              <p className="text-[10px] uppercase tracking-wider text-primary mb-1">Product name</p>
-              <p className="text-base font-semibold text-foreground pr-16">{draft.name}</p>
-              <div className="absolute top-2 right-2"><CopyButton text={draft.name} /></div>
-            </div>
-            <div className="rounded-lg border border-border bg-muted/20 p-4 relative">
-              <p className="text-[10px] uppercase tracking-wider text-primary mb-1">Slug</p>
-              <p className="text-sm font-mono text-foreground/90 pr-16">{draft.slug}</p>
-              <div className="absolute top-2 right-2"><CopyButton text={draft.slug} /></div>
-            </div>
-            <div className="rounded-lg border border-border bg-muted/20 p-4 relative">
-              <p className="text-[10px] uppercase tracking-wider text-primary mb-1">Description ({draft.description.length} chars)</p>
-              <p className="text-sm text-foreground/90 pr-16 whitespace-pre-wrap">{draft.description}</p>
-              <div className="absolute top-2 right-2"><CopyButton text={draft.description} /></div>
-            </div>
-            {draft.altNames?.length > 0 && (
-              <div className="rounded-lg border border-border bg-muted/20 p-4">
-                <p className="text-[10px] uppercase tracking-wider text-primary mb-2">Alternative names</p>
-                <div className="flex flex-wrap gap-2">
-                  {draft.altNames.map((n, i) => (
-                    <span key={i} className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">{n}</span>
-                  ))}
-                </div>
+          <div className="grid gap-4 pt-2 lg:grid-cols-[1fr_auto]">
+            <div className="space-y-3">
+              <div className="rounded-lg border border-border bg-muted/20 p-4 relative">
+                <p className="text-[10px] uppercase tracking-wider text-primary mb-1">Product name</p>
+                <p className="text-base font-semibold text-foreground pr-16">{draft.name}</p>
+                <div className="absolute top-2 right-2"><CopyButton text={draft.name} /></div>
               </div>
-            )}
+              <div className="rounded-lg border border-border bg-muted/20 p-4 relative">
+                <p className="text-[10px] uppercase tracking-wider text-primary mb-1">Slug</p>
+                <p className="text-sm font-mono text-foreground/90 pr-16">{draft.slug}</p>
+                <div className="absolute top-2 right-2"><CopyButton text={draft.slug} /></div>
+              </div>
+              <div className="rounded-lg border border-border bg-muted/20 p-4 relative">
+                <p className="text-[10px] uppercase tracking-wider text-primary mb-1">Description ({draft.description.length} chars)</p>
+                <p className="text-sm text-foreground/90 pr-16 whitespace-pre-wrap">{draft.description}</p>
+                <div className="absolute top-2 right-2"><CopyButton text={draft.description} /></div>
+              </div>
+              {draft.altNames?.length > 0 && (
+                <div className="rounded-lg border border-border bg-muted/20 p-4">
+                  <p className="text-[10px] uppercase tracking-wider text-primary mb-2">Alternative names</p>
+                  <div className="flex flex-wrap gap-2">
+                    {draft.altNames.map((n, i) => (
+                      <span key={i} className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">{n}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            <div>
+              <p className="text-[11px] uppercase tracking-widest text-muted-foreground mb-2">Storefront preview</p>
+              <ProductCardPreview name={draft.name} description={draft.description} />
+            </div>
           </div>
         )}
       </div>
