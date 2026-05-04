@@ -1,0 +1,1 @@
+REVOKE SELECT ON public.ai_feedback FROM anon, authenticated;
