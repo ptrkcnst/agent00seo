@@ -1,4 +1,4 @@
-import { AlertTriangle, AlertCircle, Info, CheckCircle2, ChevronDown, RotateCcw, ExternalLink, Sparkles } from "lucide-react";
+import { AlertTriangle, AlertCircle, Info, CheckCircle2, ChevronDown, RotateCcw, ExternalLink, Sparkles, FileDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -7,6 +7,8 @@ import { ConversionBoosterPanel } from "@/components/ai/ConversionBoosterPanel";
 import { SeoRewritePanel } from "@/components/ai/SeoRewritePanel";
 import { ProductDraftPanel } from "@/components/ai/ProductDraftPanel";
 import { PlatformPicker, getStoredPlatform, type Platform } from "@/components/ai/PlatformPicker";
+import { CrawlResults, type CrawlPage } from "@/components/CrawlResults";
+import { exportReportToPdf } from "@/lib/pdfExport";
 
 type Severity = "critical" | "warning" | "info" | "good";
 
@@ -38,6 +40,7 @@ export interface Report {
   pageContext: PageContext;
   weakSeoFields: string[];
   detectedPlatform?: string;
+  crawl?: { pages: CrawlPage[] } | null;
 }
 
 const severityMeta: Record<Severity, { icon: typeof AlertTriangle; label: string; color: string; bg: string; ring: string }> = {
@@ -192,7 +195,16 @@ export function SeoReport({ report, onReset }: { report: Report; onReset: () => 
             </div>
           </div>
         </div>
-        <div className="mt-6 flex justify-end">
+        <div className="mt-6 flex justify-end gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => exportReportToPdf(report, report.crawl?.pages)}
+            className="gap-2"
+          >
+            <FileDown className="h-3.5 w-3.5" />
+            Download PDF
+          </Button>
           <Button variant="outline" size="sm" onClick={onReset} className="gap-2">
             <RotateCcw className="h-3.5 w-3.5" />
             Analyze another site
@@ -228,6 +240,10 @@ export function SeoReport({ report, onReset }: { report: Report; onReset: () => 
           </div>
         );
       })}
+
+      {report.crawl?.pages && report.crawl.pages.length > 0 && (
+        <CrawlResults pages={report.crawl.pages} />
+      )}
 
       {/* AI-powered sections */}
       <div id="ai-actions" className="pt-2 scroll-mt-6 transition-all">
