@@ -14,7 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ai_feedback: {
+        Row: {
+          context: Json | null
+          created_at: string
+          id: string
+          item_key: string
+          page_url: string | null
+          section: Database["public"]["Enums"]["ai_feedback_section"]
+          vote: Database["public"]["Enums"]["ai_feedback_vote"]
+        }
+        Insert: {
+          context?: Json | null
+          created_at?: string
+          id?: string
+          item_key: string
+          page_url?: string | null
+          section: Database["public"]["Enums"]["ai_feedback_section"]
+          vote: Database["public"]["Enums"]["ai_feedback_vote"]
+        }
+        Update: {
+          context?: Json | null
+          created_at?: string
+          id?: string
+          item_key?: string
+          page_url?: string | null
+          section?: Database["public"]["Enums"]["ai_feedback_section"]
+          vote?: Database["public"]["Enums"]["ai_feedback_vote"]
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +52,12 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      ai_feedback_section:
+        | "smart_fix"
+        | "seo_rewrite"
+        | "conversion_variant"
+        | "product_draft"
+      ai_feedback_vote: "up" | "down"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +184,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      ai_feedback_section: [
+        "smart_fix",
+        "seo_rewrite",
+        "conversion_variant",
+        "product_draft",
+      ],
+      ai_feedback_vote: ["up", "down"],
+    },
   },
 } as const
