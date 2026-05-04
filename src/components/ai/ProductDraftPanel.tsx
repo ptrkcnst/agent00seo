@@ -8,6 +8,7 @@ import { toast } from "@/hooks/use-toast";
 import { AiSectionCard } from "./AiSectionCard";
 import { CopyButton } from "./CopyButton";
 import { ProductCardPreview } from "./ProductCardPreview";
+import { FeedbackButtons } from "./FeedbackButtons";
 
 interface PageContext { url: string; title: string; metaDescription: string; h1: string; topic: string; }
 interface Draft { name: string; slug: string; description: string; altNames: string[]; }
@@ -89,9 +90,17 @@ export function ProductDraftPanel({ pageContext }: { pageContext: PageContext })
                 </div>
               )}
             </div>
-            <div>
+            <div className="space-y-3">
               <p className="text-[11px] uppercase tracking-widest text-muted-foreground mb-2">Storefront preview</p>
               <ProductCardPreview name={draft.name} description={draft.description} />
+              <div className="flex justify-end">
+                <FeedbackButtons
+                  section="product_draft"
+                  itemKey={draft.slug || draft.name}
+                  pageUrl={pageContext.url}
+                  context={{ idea, name: draft.name, slug: draft.slug }}
+                />
+              </div>
             </div>
           </div>
         )}

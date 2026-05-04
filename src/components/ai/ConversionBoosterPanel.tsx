@@ -5,6 +5,7 @@ import { toast } from "@/hooks/use-toast";
 import { AiSectionCard } from "./AiSectionCard";
 import { CopyButton } from "./CopyButton";
 import { HeroPreview } from "./HeroPreview";
+import { FeedbackButtons } from "./FeedbackButtons";
 
 interface PageContext { url: string; title: string; metaDescription: string; h1: string; topic: string; }
 interface Variant { headline: string; subheadline: string; angle: string; }
@@ -45,6 +46,14 @@ export function ConversionBoosterPanel({ pageContext }: { pageContext: PageConte
                 <CopyButton text={`${v.headline}\n\n${v.subheadline}`} />
               </div>
               <HeroPreview headline={v.headline} subheadline={v.subheadline} />
+              <div className="flex justify-end">
+                <FeedbackButtons
+                  section="conversion_variant"
+                  itemKey={`variant-${i}`}
+                  pageUrl={pageContext.url}
+                  context={{ angle: v.angle, headline: v.headline, subheadline: v.subheadline }}
+                />
+              </div>
             </div>
           ))}
         </div>

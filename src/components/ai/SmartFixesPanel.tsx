@@ -70,6 +70,14 @@ export function SmartFixesPanel({
                   </div>
                 )}
                 <PlatformSteps steps={f.implementationSteps || []} platform={platform} />
+                <div className="mt-3 flex justify-end">
+                  <FeedbackButtons
+                    section="smart_fix"
+                    itemKey={f.issueId}
+                    pageUrl={pageContext.url}
+                    context={{ platform, issueTitle: issue?.title }}
+                  />
+                </div>
               </div>
             );
           })}

@@ -74,6 +74,14 @@ export function SeoRewritePanel({ pageContext, weakFields }: { pageContext: Page
               <p className="text-[10px] uppercase tracking-wider text-primary mb-1">{FIELD_LABELS[key]} ({value.length} chars)</p>
               <p className="text-sm text-foreground/90 pr-16">{value}</p>
               <div className="absolute top-2 right-2"><CopyButton text={value} /></div>
+              <div className="mt-3 flex justify-end">
+                <FeedbackButtons
+                  section="seo_rewrite"
+                  itemKey={key}
+                  pageUrl={pageContext.url}
+                  context={{ field: key, value }}
+                />
+              </div>
             </div>
           ))}
 
