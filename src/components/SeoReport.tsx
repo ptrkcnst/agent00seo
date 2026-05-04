@@ -1,11 +1,12 @@
 import { AlertTriangle, AlertCircle, Info, CheckCircle2, ChevronDown, RotateCcw, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { SmartFixesPanel } from "@/components/ai/SmartFixesPanel";
 import { ConversionBoosterPanel } from "@/components/ai/ConversionBoosterPanel";
 import { SeoRewritePanel } from "@/components/ai/SeoRewritePanel";
 import { ProductDraftPanel } from "@/components/ai/ProductDraftPanel";
+import { PlatformPicker, getStoredPlatform, type Platform } from "@/components/ai/PlatformPicker";
 
 type Severity = "critical" | "warning" | "info" | "good";
 
