@@ -241,6 +241,10 @@ export function SeoReport({ report, onReset }: { report: Report; onReset: () => 
         );
       })}
 
+      {report.crawl?.pages && report.crawl.pages.length > 0 && (
+        <CrawlResults pages={report.crawl.pages} />
+      )}
+
       {/* AI-powered sections */}
       <div id="ai-actions" className="pt-2 scroll-mt-6 transition-all">
         <div className="flex items-center gap-3 mb-4">
