@@ -18,6 +18,14 @@ interface Issue {
   impact: number; // 1-10
 }
 
+interface PageContext {
+  url: string;
+  title: string;
+  metaDescription: string;
+  h1: string;
+  topic: string;
+}
+
 interface AnalysisReport {
   url: string;
   score: number;
@@ -33,6 +41,8 @@ interface AnalysisReport {
     score: number;
     issues: Issue[];
   }[];
+  pageContext: PageContext;
+  weakSeoFields: string[];
 }
 
 function normalizeUrl(input: string): string {
