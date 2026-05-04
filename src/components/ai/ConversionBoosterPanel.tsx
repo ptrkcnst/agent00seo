@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { AiSectionCard } from "./AiSectionCard";
 import { CopyButton } from "./CopyButton";
+import { HeroPreview } from "./HeroPreview";
 
 interface PageContext { url: string; title: string; metaDescription: string; h1: string; topic: string; }
 interface Variant { headline: string; subheadline: string; angle: string; }
@@ -30,21 +31,20 @@ export function ConversionBoosterPanel({ pageContext }: { pageContext: PageConte
     <AiSectionCard
       icon={Rocket}
       title="Conversion Booster"
-      subtitle="3 catchy hero rewrites tuned to grab attention and lift conversions"
+      subtitle="3 catchy hero rewrites — see how each one would look in your page hero"
       loading={loading}
       hasResults={!!variants}
       onGenerate={generate}
     >
       {variants && variants.length > 0 && (
-        <div className="grid gap-3 mt-2 md:grid-cols-3">
+        <div className="grid gap-4 mt-2 lg:grid-cols-3">
           {variants.map((v, i) => (
-            <div key={i} className="rounded-lg border border-border bg-muted/20 p-4 flex flex-col">
-              <span className="text-[10px] uppercase tracking-wider text-primary mb-2">{v.angle}</span>
-              <h4 className="text-sm font-semibold text-foreground leading-snug">{v.headline}</h4>
-              <p className="text-xs text-muted-foreground mt-2 flex-1">{v.subheadline}</p>
-              <div className="mt-3 -mx-1">
+            <div key={i} className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] uppercase tracking-wider text-primary">{v.angle}</span>
                 <CopyButton text={`${v.headline}\n\n${v.subheadline}`} />
               </div>
+              <HeroPreview headline={v.headline} subheadline={v.subheadline} />
             </div>
           ))}
         </div>

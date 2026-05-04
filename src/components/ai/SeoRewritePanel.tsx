@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { AiSectionCard } from "./AiSectionCard";
 import { CopyButton } from "./CopyButton";
+import { BeforeAfterSerp, SerpPreview } from "./SerpPreview";
 
 interface PageContext { url: string; title: string; metaDescription: string; h1: string; topic: string; }
 interface Rewrites { metaTitle?: string; metaDescription?: string; h1?: string; }
@@ -32,6 +33,9 @@ export function SeoRewritePanel({ pageContext, weakFields }: { pageContext: Page
     }
   };
 
+  const showSerp =
+    result && (weakFields.includes("metaTitle") || weakFields.includes("metaDescription"));
+
   return (
     <AiSectionCard
       icon={FileText}
@@ -47,7 +51,24 @@ export function SeoRewritePanel({ pageContext, weakFields }: { pageContext: Page
       hideCta={weakFields.length === 0}
     >
       {result && (
-        <div className="space-y-3 mt-2">
+        <div className="space-y-4 mt-2">
+          {showSerp && (
+            <div>
+              <p className="text-[11px] uppercase tracking-widest text-muted-foreground mb-2">Google search preview</p>
+              <BeforeAfterSerp
+                url={pageContext.url}
+                before={{
+                  title: pageContext.title,
+                  description: pageContext.metaDescription,
+                }}
+                after={{
+                  title: result.rewrites.metaTitle ?? pageContext.title,
+                  description: result.rewrites.metaDescription ?? pageContext.metaDescription,
+                }}
+              />
+            </div>
+          )}
+
           {(Object.entries(result.rewrites) as [keyof Rewrites, string][]).map(([key, value]) => value && (
             <div key={key} className="rounded-lg border border-border bg-muted/20 p-4 relative">
               <p className="text-[10px] uppercase tracking-wider text-primary mb-1">{FIELD_LABELS[key]} ({value.length} chars)</p>
@@ -55,6 +76,16 @@ export function SeoRewritePanel({ pageContext, weakFields }: { pageContext: Page
               <div className="absolute top-2 right-2"><CopyButton text={value} /></div>
             </div>
           ))}
+
+          {result.rewrites.h1 && (
+            <div>
+              <p className="text-[11px] uppercase tracking-widest text-muted-foreground mb-2">Page heading preview</p>
+              <div className="rounded-lg border border-border bg-background p-6">
+                <h1 className="text-2xl font-bold text-foreground">{result.rewrites.h1}</h1>
+              </div>
+            </div>
+          )}
+
           {result.rationale && (
             <p className="text-xs text-muted-foreground italic">{result.rationale}</p>
           )}
