@@ -5,6 +5,7 @@ import { toast } from "@/hooks/use-toast";
 import { AiSectionCard } from "./AiSectionCard";
 import { CopyButton } from "./CopyButton";
 import { PlatformSteps } from "./PlatformSteps";
+import { FeedbackButtons } from "./FeedbackButtons";
 import type { Platform } from "./PlatformPicker";
 
 interface Issue { id: string; title: string; description: string; severity: string; }
