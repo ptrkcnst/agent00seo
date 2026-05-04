@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import { Zap, Mail, Lock, User as UserIcon, ArrowRight } from "lucide-react";
 import { ErrorAlert } from "@/components/ErrorAlert";
+import { AppFooter } from "@/components/AppFooter";
 
 export default function Auth() {
   const nav = useNavigate();
