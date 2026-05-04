@@ -190,6 +190,27 @@ export function SeoReport({ report, onReset }: { report: Report; onReset: () => 
           </div>
         );
       })}
+
+      {/* AI-powered sections */}
+      <div className="pt-2">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="h-px flex-1 bg-border" />
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">AI-powered actions</p>
+          <div className="h-px flex-1 bg-border" />
+        </div>
+      </div>
+
+      {(() => {
+        const allIssues = report.categories.flatMap(c => c.issues);
+        return (
+          <>
+            <SmartFixesPanel issues={allIssues} pageContext={report.pageContext} />
+            <SeoRewritePanel pageContext={report.pageContext} weakFields={report.weakSeoFields} />
+            <ConversionBoosterPanel pageContext={report.pageContext} />
+            <ProductDraftPanel pageContext={report.pageContext} />
+          </>
+        );
+      })()}
     </div>
   );
 }
