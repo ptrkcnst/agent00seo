@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { AppHeader } from "@/components/AppHeader";
+import { AppFooter } from "@/components/AppFooter";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Trash2, RotateCcw, History as HistoryIcon, Eye } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
