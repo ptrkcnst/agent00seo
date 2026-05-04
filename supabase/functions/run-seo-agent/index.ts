@@ -289,11 +289,75 @@ function analyze(url: string, html: string, status: number, headers: Headers): A
   };
 }
 
+function extractInternalLinks(html: string, baseUrl: string, max: number): string[] {
+  const out = new Set<string>();
+  const base = new URL(baseUrl);
+  const re = /<a\b[^>]*href=["']([^"']+)["']/gi;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(html)) !== null && out.size < max * 4) {
+    const href = m[1];
+    if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:") || href.startsWith("javascript:")) continue;
+    try {
+      const u = new URL(href, base);
+      if (u.hostname !== base.hostname) continue;
+      // strip hash & trailing slash for de-dup
+      u.hash = "";
+      const norm = u.toString().replace(/\/$/, "");
+      if (norm === baseUrl.replace(/\/$/, "")) continue;
+      // skip files
+      if (/\.(pdf|jpg|jpeg|png|gif|webp|svg|zip|mp4|css|js|xml|ico)(\?|$)/i.test(u.pathname)) continue;
+      out.add(norm);
+    } catch { /* ignore bad URL */ }
+  }
+  return Array.from(out).slice(0, max);
+}
+
+interface CrawlPage {
+  url: string;
+  score: number;
+  grade: string;
+  critical: number;
+  warnings: number;
+  passed: number;
+  title: string;
+  status: number;
+  error?: string;
+}
+
+async function crawlPages(homepage: string, html: string, max: number): Promise<{ pages: CrawlPage[] }> {
+  const links = extractInternalLinks(html, homepage, max);
+  const results: CrawlPage[] = [];
+  // sequential to be polite (and stay within edge function time budgets)
+  for (const link of links) {
+    const fetched = await fetchSite(link);
+    if (!fetched) {
+      results.push({ url: link, score: 0, grade: "F", critical: 0, warnings: 0, passed: 0, title: "", status: 0, error: "fetch failed" });
+      continue;
+    }
+    try {
+      const r = analyze(link, fetched.html, fetched.status, fetched.headers);
+      results.push({
+        url: link,
+        score: r.score,
+        grade: r.grade,
+        critical: r.stats.critical,
+        warnings: r.stats.warnings,
+        passed: r.stats.passed,
+        title: r.pageContext.title,
+        status: fetched.status,
+      });
+    } catch (e) {
+      results.push({ url: link, score: 0, grade: "F", critical: 0, warnings: 0, passed: 0, title: "", status: fetched.status, error: e instanceof Error ? e.message : "analysis failed" });
+    }
+  }
+  return { pages: results };
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { url } = await req.json();
+    const { url, crawl } = await req.json();
     if (!url || typeof url !== "string") {
       return new Response(JSON.stringify({ error: "A website URL is required." }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -309,7 +373,14 @@ serve(async (req) => {
     }
 
     const report = analyze(finalUrl, fetched.html, fetched.status, fetched.headers);
-    return new Response(JSON.stringify(report), {
+
+    let crawlResult: { pages: CrawlPage[] } | null = null;
+    if (crawl) {
+      const max = Math.min(Math.max(parseInt(String(crawl.max ?? 10), 10) || 10, 1), 10);
+      crawlResult = await crawlPages(finalUrl, fetched.html, max);
+    }
+
+    return new Response(JSON.stringify({ ...report, crawl: crawlResult }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error: unknown) {
