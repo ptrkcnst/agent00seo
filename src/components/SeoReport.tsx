@@ -1,4 +1,4 @@
-import { AlertTriangle, AlertCircle, Info, CheckCircle2, ChevronDown, RotateCcw, ExternalLink, Sparkles } from "lucide-react";
+import { AlertTriangle, AlertCircle, Info, CheckCircle2, ChevronDown, RotateCcw, ExternalLink, Sparkles, FileDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -7,6 +7,8 @@ import { ConversionBoosterPanel } from "@/components/ai/ConversionBoosterPanel";
 import { SeoRewritePanel } from "@/components/ai/SeoRewritePanel";
 import { ProductDraftPanel } from "@/components/ai/ProductDraftPanel";
 import { PlatformPicker, getStoredPlatform, type Platform } from "@/components/ai/PlatformPicker";
+import { CrawlResults, type CrawlPage } from "@/components/CrawlResults";
+import { exportReportToPdf } from "@/lib/pdfExport";
 
 type Severity = "critical" | "warning" | "info" | "good";
 
