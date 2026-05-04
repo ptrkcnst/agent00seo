@@ -122,8 +122,23 @@ function IssueCard({ issue }: { issue: Issue }) {
   );
 }
 
+const VALID_PLATFORMS: Platform[] = ["wordpress", "shopify", "webflow", "wix", "lovable", "nextjs", "html", "other"];
+
 export function SeoReport({ report, onReset }: { report: Report; onReset: () => void }) {
   const scoreColor = report.score >= 80 ? "text-success" : report.score >= 60 ? "text-warning" : "text-destructive";
+
+  const detected = (VALID_PLATFORMS.includes(report.detectedPlatform as Platform)
+    ? report.detectedPlatform
+    : null) as Platform | null;
+
+  const [platform, setPlatform] = useState<Platform>(() => {
+    return getStoredPlatform() ?? detected ?? "other";
+  });
+
+  // If user hasn't picked one yet, follow detected when a new report arrives.
+  useEffect(() => {
+    if (!getStoredPlatform() && detected) setPlatform(detected);
+  }, [detected]);
 
   return (
     <div className="space-y-6 animate-fade-in-up">
