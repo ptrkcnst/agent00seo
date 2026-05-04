@@ -217,11 +217,13 @@ export function SeoReport({ report, onReset }: { report: Report; onReset: () => 
         </div>
       </div>
 
+      <PlatformPicker value={platform} onChange={setPlatform} detected={detected} />
+
       {(() => {
         const allIssues = report.categories.flatMap(c => c.issues);
         return (
           <>
-            <SmartFixesPanel issues={allIssues} pageContext={report.pageContext} />
+            <SmartFixesPanel issues={allIssues} pageContext={report.pageContext} platform={platform} />
             <SeoRewritePanel pageContext={report.pageContext} weakFields={report.weakSeoFields} />
             <ConversionBoosterPanel pageContext={report.pageContext} />
             <ProductDraftPanel pageContext={report.pageContext} />
