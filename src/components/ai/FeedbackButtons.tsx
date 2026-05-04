@@ -25,7 +25,7 @@ export function FeedbackButtons({ section, itemKey, pageUrl, context, className 
     const previous = vote;
     setVote(next);
     try {
-      const { error } = await supabase.from("ai_feedback").insert({
+      const { error } = await (supabase.from("ai_feedback") as any).insert({
         section,
         item_key: itemKey,
         vote: next,
