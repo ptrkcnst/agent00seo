@@ -42,15 +42,16 @@ const Index = () => {
 
   const saveAudit = async (rep: Report) => {
     if (!user) return;
-    const { error } = await supabase.from("audits").insert([{
+    const row = {
       user_id: user.id,
       url: rep.url,
       score: rep.score,
       grade: rep.grade,
       summary: rep.summary,
-      report: rep as unknown as Record<string, unknown>,
-      crawl: (rep.crawl ?? null) as unknown as Record<string, unknown> | null,
-    }]);
+      report: rep,
+      crawl: rep.crawl ?? null,
+    };
+    const { error } = await supabase.from("audits").insert([row as never]);
     if (error) console.error("Failed to save audit:", error.message);
   };
 
