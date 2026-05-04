@@ -2,6 +2,10 @@ import { AlertTriangle, AlertCircle, Info, CheckCircle2, ChevronDown, RotateCcw,
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { SmartFixesPanel } from "@/components/ai/SmartFixesPanel";
+import { ConversionBoosterPanel } from "@/components/ai/ConversionBoosterPanel";
+import { SeoRewritePanel } from "@/components/ai/SeoRewritePanel";
+import { ProductDraftPanel } from "@/components/ai/ProductDraftPanel";
 
 type Severity = "critical" | "warning" | "info" | "good";
 
@@ -15,6 +19,14 @@ interface Issue {
   impact: number;
 }
 
+export interface PageContext {
+  url: string;
+  title: string;
+  metaDescription: string;
+  h1: string;
+  topic: string;
+}
+
 export interface Report {
   url: string;
   score: number;
@@ -22,6 +34,8 @@ export interface Report {
   summary: string;
   stats: { critical: number; warnings: number; passed: number };
   categories: { name: string; score: number; issues: Issue[] }[];
+  pageContext: PageContext;
+  weakSeoFields: string[];
 }
 
 const severityMeta: Record<Severity, { icon: typeof AlertTriangle; label: string; color: string; bg: string; ring: string }> = {
@@ -176,6 +190,27 @@ export function SeoReport({ report, onReset }: { report: Report; onReset: () => 
           </div>
         );
       })}
+
+      {/* AI-powered sections */}
+      <div className="pt-2">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="h-px flex-1 bg-border" />
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">AI-powered actions</p>
+          <div className="h-px flex-1 bg-border" />
+        </div>
+      </div>
+
+      {(() => {
+        const allIssues = report.categories.flatMap(c => c.issues);
+        return (
+          <>
+            <SmartFixesPanel issues={allIssues} pageContext={report.pageContext} />
+            <SeoRewritePanel pageContext={report.pageContext} weakFields={report.weakSeoFields} />
+            <ConversionBoosterPanel pageContext={report.pageContext} />
+            <ProductDraftPanel pageContext={report.pageContext} />
+          </>
+        );
+      })()}
     </div>
   );
 }

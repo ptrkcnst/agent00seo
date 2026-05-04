@@ -18,6 +18,14 @@ interface Issue {
   impact: number; // 1-10
 }
 
+interface PageContext {
+  url: string;
+  title: string;
+  metaDescription: string;
+  h1: string;
+  topic: string;
+}
+
 interface AnalysisReport {
   url: string;
   score: number;
@@ -33,6 +41,8 @@ interface AnalysisReport {
     score: number;
     issues: Issue[];
   }[];
+  pageContext: PageContext;
+  weakSeoFields: string[];
 }
 
 function normalizeUrl(input: string): string {
@@ -235,6 +245,14 @@ function analyze(url: string, html: string, status: number, headers: Headers): A
       ? `${warnings} warning${warnings === 1 ? "" : "s"} found. Quick wins available.`
       : "Your site looks great! Keep monitoring for new issues.";
 
+  // Derive a topic guess from title/h1
+  const topic = (title || h1s[0] || "").slice(0, 120);
+
+  const weakSeoFields: string[] = [];
+  if (!title || title.length < 30 || title.length > 65) weakSeoFields.push("metaTitle");
+  if (!metaDescription || metaDescription.length < 70 || metaDescription.length > 165) weakSeoFields.push("metaDescription");
+  if (h1s.length === 0 || h1s.length > 1) weakSeoFields.push("h1");
+
   return {
     url,
     score: Math.round(score),
@@ -242,6 +260,14 @@ function analyze(url: string, html: string, status: number, headers: Headers): A
     summary,
     stats: { critical, warnings, passed: passed.length },
     categories,
+    pageContext: {
+      url,
+      title,
+      metaDescription,
+      h1: h1s[0] || "",
+      topic,
+    },
+    weakSeoFields,
   };
 }
 
