@@ -34,7 +34,7 @@ const Index = () => {
         return;
       }
       const rep = data.report as unknown as Report;
-      if (data.crawl) (rep as Report).crawl = data.crawl as Report["crawl"];
+      if (data.crawl) (rep as Report).crawl = data.crawl as unknown as Report["crawl"];
       setReport(rep);
       setWebsite(data.url);
     });
@@ -42,7 +42,7 @@ const Index = () => {
 
   const saveAudit = async (rep: Report) => {
     if (!user) return;
-    const { error } = await supabase.from("audits").insert({
+    const { error } = await supabase.from("audits").insert([{
       user_id: user.id,
       url: rep.url,
       score: rep.score,
@@ -50,7 +50,7 @@ const Index = () => {
       summary: rep.summary,
       report: rep as unknown as Record<string, unknown>,
       crawl: (rep.crawl ?? null) as unknown as Record<string, unknown> | null,
-    });
+    }]);
     if (error) console.error("Failed to save audit:", error.message);
   };
 
