@@ -37,6 +37,7 @@ export interface Report {
   categories: { name: string; score: number; issues: Issue[] }[];
   pageContext: PageContext;
   weakSeoFields: string[];
+  detectedPlatform?: string;
 }
 
 const severityMeta: Record<Severity, { icon: typeof AlertTriangle; label: string; color: string; bg: string; ring: string }> = {
