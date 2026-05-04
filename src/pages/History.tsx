@@ -101,6 +101,7 @@ export default function History() {
             })}
           </div>
         )}
+        <AppFooter />
       </div>
     </div>
   );
