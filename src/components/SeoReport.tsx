@@ -40,6 +40,7 @@ export interface Report {
   pageContext: PageContext;
   weakSeoFields: string[];
   detectedPlatform?: string;
+  crawl?: { pages: CrawlPage[] } | null;
 }
 
 const severityMeta: Record<Severity, { icon: typeof AlertTriangle; label: string; color: string; bg: string; ring: string }> = {
@@ -194,7 +195,16 @@ export function SeoReport({ report, onReset }: { report: Report; onReset: () => 
             </div>
           </div>
         </div>
-        <div className="mt-6 flex justify-end">
+        <div className="mt-6 flex justify-end gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => exportReportToPdf(report, report.crawl?.pages)}
+            className="gap-2"
+          >
+            <FileDown className="h-3.5 w-3.5" />
+            Download PDF
+          </Button>
           <Button variant="outline" size="sm" onClick={onReset} className="gap-2">
             <RotateCcw className="h-3.5 w-3.5" />
             Analyze another site
