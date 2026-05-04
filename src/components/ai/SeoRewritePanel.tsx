@@ -5,6 +5,7 @@ import { toast } from "@/hooks/use-toast";
 import { AiSectionCard } from "./AiSectionCard";
 import { CopyButton } from "./CopyButton";
 import { BeforeAfterSerp, SerpPreview } from "./SerpPreview";
+import { FeedbackButtons } from "./FeedbackButtons";
 
 interface PageContext { url: string; title: string; metaDescription: string; h1: string; topic: string; }
 interface Rewrites { metaTitle?: string; metaDescription?: string; h1?: string; }
