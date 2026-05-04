@@ -1,4 +1,4 @@
-import { AlertTriangle, AlertCircle, Info, CheckCircle2, ChevronDown, RotateCcw, ExternalLink } from "lucide-react";
+import { AlertTriangle, AlertCircle, Info, CheckCircle2, ChevronDown, RotateCcw, ExternalLink, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -116,6 +116,27 @@ function IssueCard({ issue }: { issue: Issue }) {
               <p className="text-sm text-foreground/85">{issue.recommendation}</p>
             </div>
           )}
+          {issue.severity !== "good" && (
+            <div className="pt-1">
+              <Button
+                size="sm"
+                variant="outline"
+                className="gap-1.5 h-8 text-xs border-primary/40 text-primary hover:bg-primary/10 hover:text-primary"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const el = document.getElementById("ai-actions");
+                  if (el) {
+                    el.scrollIntoView({ behavior: "smooth", block: "start" });
+                    el.classList.add("ring-2", "ring-primary/50", "rounded-2xl");
+                    setTimeout(() => el.classList.remove("ring-2", "ring-primary/50", "rounded-2xl"), 1600);
+                  }
+                }}
+              >
+                <Sparkles className="h-3 w-3" />
+                Fix with AI
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -209,7 +230,7 @@ export function SeoReport({ report, onReset }: { report: Report; onReset: () => 
       })}
 
       {/* AI-powered sections */}
-      <div className="pt-2">
+      <div id="ai-actions" className="pt-2 scroll-mt-6 transition-all">
         <div className="flex items-center gap-3 mb-4">
           <div className="h-px flex-1 bg-border" />
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground">AI-powered actions</p>
