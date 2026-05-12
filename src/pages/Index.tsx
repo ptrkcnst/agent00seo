@@ -104,7 +104,7 @@ const Index = () => {
           <div className="animate-fade-in-up">
             <div className="text-center mb-8">
               <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-3">
-                Score your site's <span className="text-gradient">SEO health</span>
+                Analyze your site's <span className="text-gradient">SEO health</span>
               </h2>
               <p className="text-muted-foreground text-base max-w-xl mx-auto">
                 Enter your website URL and get an instant audit with a real score, prioritized issues, and clear fixes.
