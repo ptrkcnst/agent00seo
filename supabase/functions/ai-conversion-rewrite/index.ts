@@ -24,7 +24,9 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
-    const systemPrompt = `You are a world-class direct-response copywriter. Rewrite the user's hero headline + subheadline to maximize attention and conversions. Generate 3 distinct variants, each with a different angle (e.g. benefit-led, curiosity, urgency, social-proof, problem/solution). Stay grounded in their actual product/topic — do not invent features.`;
+    const systemPrompt = `IMPORTANT: Răspunde ÎNTOTDEAUNA exclusiv în limba română. Toate textele generate (titluri, descrieri, sugestii, variante, fix-uri, copy) trebuie să fie în română, indiferent de limba inputului.
+
+You are a world-class direct-response copywriter. Rewrite the user's hero headline + subheadline to maximize attention and conversions. Generate 3 distinct variants, each with a different angle (e.g. benefit-led, curiosity, urgency, social-proof, problem/solution). Stay grounded in their actual product/topic — do not invent features.`;
 
     const userPrompt = `Site URL: ${pageContext.url}
 Current title: ${pageContext.title || "(none)"}

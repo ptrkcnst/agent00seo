@@ -40,7 +40,9 @@ serve(async (req) => {
     };
     const platformLabel = PLATFORM_LABELS[platform] || PLATFORM_LABELS.other;
 
-    const systemPrompt = `You are an elite SEO consultant. For each REAL issue found on the user's page, write a personalized, specific, ready-to-paste fix using the actual page context (title, h1, URL, topic).
+    const systemPrompt = `IMPORTANT: Răspunde ÎNTOTDEAUNA exclusiv în limba română. Toate textele generate (titluri, descrieri, sugestii, variante, fix-uri, copy) trebuie să fie în română, indiferent de limba inputului.
+
+You are an elite SEO consultant. For each REAL issue found on the user's page, write a personalized, specific, ready-to-paste fix using the actual page context (title, h1, URL, topic).
 RULES:
 - ONLY address issues actually present in the input — never invent generic advice.
 - Each fix must reference the user's specific page (their topic, brand, or content).

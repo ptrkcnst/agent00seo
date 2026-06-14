@@ -29,7 +29,9 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
-    const systemPrompt = `You are an SEO copywriter. Rewrite ONLY the fields listed as weak/missing — leave everything else alone. Use the actual page topic and content. Follow strict length rules:
+    const systemPrompt = `IMPORTANT: Răspunde ÎNTOTDEAUNA exclusiv în limba română. Toate textele generate (titluri, descrieri, sugestii, variante, fix-uri, copy) trebuie să fie în română, indiferent de limba inputului.
+
+You are an SEO copywriter. Rewrite ONLY the fields listed as weak/missing — leave everything else alone. Use the actual page topic and content. Follow strict length rules:
 - metaTitle: 50-60 characters
 - metaDescription: 140-160 characters
 - h1: clear, keyword-rich, max ~70 characters
