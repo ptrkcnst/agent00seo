@@ -24,15 +24,19 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
-    const systemPrompt = `IMPORTANT: Răspunde ÎNTOTDEAUNA exclusiv în limba română. Toate textele generate (titluri, descrieri, sugestii, variante, fix-uri, copy) trebuie să fie în română, indiferent de limba inputului.
+    const systemPrompt = `IMPORTANT: Răspunde ÎNTOTDEAUNA exclusiv în limba română.
+Toate textele generate trebuie să fie în română: headline, subheadline și angle.
+Nu folosi cuvinte/etichete în engleză precum "Benefit-led", "Curiosity", "Urgency", "Social-proof" sau "Problem/solution".
 
-You are a world-class direct-response copywriter. Rewrite the user's hero headline + subheadline to maximize attention and conversions. Generate 3 distinct variants, each with a different angle (e.g. benefit-led, curiosity, urgency, social-proof, problem/solution). Stay grounded in their actual product/topic — do not invent features.`;
+Ești un copywriter expert în conversii. Rescrie titlul principal și subtitlul hero pentru a crește atenția și conversiile. Generează 3 variante distincte, fiecare cu un unghi diferit, de exemplu: Beneficiu clar, Curiozitate, Urgență, Dovadă socială, Problemă/Soluție. Rămâi strict ancorat în produsul/subiectul real al site-ului — nu inventa funcționalități.`;
 
     const userPrompt = `Site URL: ${pageContext.url}
 Current title: ${pageContext.title || "(none)"}
 Current H1: ${pageContext.h1 || "(none)"}
 Current meta description: ${pageContext.metaDescription || "(none)"}
-Topic: ${pageContext.topic || "(unknown)"}`;
+        Topic: ${pageContext.topic || "(unknown)"}
+
+Cerință obligatorie: răspunsul final trebuie să fie exclusiv în limba română, inclusiv eticheta "angle" pentru fiecare variantă.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -47,7 +51,7 @@ Topic: ${pageContext.topic || "(unknown)"}`;
           type: "function",
           function: {
             name: "return_variants",
-            description: "Return 3 hero copy variants",
+            description: "Returnează 3 variante de copy pentru hero, toate exclusiv în limba română",
             parameters: {
               type: "object",
               properties: {
@@ -56,9 +60,9 @@ Topic: ${pageContext.topic || "(unknown)"}`;
                   items: {
                     type: "object",
                     properties: {
-                      headline: { type: "string", description: "Catchy hero headline, max ~10 words" },
-                      subheadline: { type: "string", description: "Supporting line, 1-2 sentences" },
-                      angle: { type: "string", description: "Short label like 'Benefit-led', 'Curiosity', etc." },
+                      headline: { type: "string", description: "Titlu hero atractiv, exclusiv în română, maximum aproximativ 10 cuvinte" },
+                      subheadline: { type: "string", description: "Text suport, exclusiv în română, 1-2 propoziții" },
+                      angle: { type: "string", description: "Etichetă scurtă exclusiv în română, de exemplu: Beneficiu clar, Curiozitate, Urgență, Dovadă socială, Problemă/Soluție" },
                     },
                     required: ["headline", "subheadline", "angle"],
                     additionalProperties: false,
