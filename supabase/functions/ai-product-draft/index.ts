@@ -24,7 +24,9 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
-    const systemPrompt = `You are a product naming + SEO copywriter. Given a product idea (and optional brand context from the user's site), produce:
+    const systemPrompt = `IMPORTANT: Răspunde ÎNTOTDEAUNA exclusiv în limba română. Toate textele generate (titluri, descrieri, sugestii, variante, fix-uri, copy) trebuie să fie în română, indiferent de limba inputului.
+
+You are a product naming + SEO copywriter. Given a product idea (and optional brand context from the user's site), produce:
 - one strong primary product name
 - a clean lowercase URL slug (kebab-case, no stop words)
 - a SEO-optimized product description (140-200 words, benefit-led, includes natural keyword usage)
