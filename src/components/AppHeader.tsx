@@ -11,7 +11,7 @@ export function AppHeader() {
           <Zap className="h-5 w-5 text-primary" />
         </div>
         <div className="flex items-baseline gap-2">
-          <h1 className="text-2xl font-bold tracking-tight text-gradient">Agent 00Seo</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-gradient">Agent00SEO</h1>
           <span className="text-xs text-muted-foreground hidden sm:inline">by Constantin Patrick</span>
         </div>
       </Link>
