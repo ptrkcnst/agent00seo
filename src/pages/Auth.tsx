@@ -66,7 +66,7 @@ export default function Auth() {
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 glow-primary-sm mb-3">
             <Zap className="h-5 w-5 text-primary" />
           </div>
-          <h1 className="text-2xl font-bold text-gradient">Agent 00Seo</h1>
+          <h1 className="text-2xl font-bold text-gradient">Agent00SEO</h1>
           <p className="text-sm text-muted-foreground mt-1">
             {mode === "signin" ? "Sign in to continue" : "Create your account"}
           </p>

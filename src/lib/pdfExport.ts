@@ -131,7 +131,7 @@ export function exportReportToPdf(report: Report, crawl?: CrawlPage[] | null) {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
     doc.setTextColor(160, 160, 170);
-    doc.text(`Agent 00Seo · Page ${i} of ${total}`, pageW / 2, pageH - 20, { align: "center" });
+    doc.text(`Agent00SEO · Page ${i} of ${total}`, pageW / 2, pageH - 20, { align: "center" });
   }
 
   const safeHost = report.url.replace(/^https?:\/\//, "").replace(/[^a-z0-9.-]/gi, "_").slice(0, 40);
